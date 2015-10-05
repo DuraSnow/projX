@@ -14,11 +14,12 @@ using namespace std;
 
 
 int main(int argc, const char * argv[]) {
-    int sheet1[26][100],sheet2[26][100],count[26],countX[26],i,j;
-    long len;
+    int sheet2[200][100],countX[800],n[800],dis[100],num[200][200],i,j,k=0,max;
+    long len1,len2;
     string str1, str2;
-    for (j = 0; j <26; j++){
-        count[i] = 0;
+    for (j = 0; j <800; j++){
+        countX[j] = 0;
+        n[j]=0;
     }
     ifstream data1 ("/Users/abelard/Desktop/fasta/fasta/proteinX.fasta");
     ifstream data2 ("/Users/abelard/Desktop/fasta/fasta/protein.fasta");
@@ -36,49 +37,55 @@ int main(int argc, const char * argv[]) {
         data1.getline(buffer, 1000);
         str1+=buffer;
     }
-  
+    len1 = str1.length();
 
     data2.getline(buffer, 1000);
     while(!data2.eof()){
         data2.getline(buffer, 1000);
         str2+=buffer;
     }
-    len = str1.length();
-    for (i = 0;i < len; i++){
-        for (j = 0; j <26; j++){
-            char ch = 'A' + j;
-            if (str1[i] ==  ch){
-                sheet1[j][count[j]] = i+1;
-                count[j]++;
-            }
-        }
-    }
-
-    len = str2.length();
-    for (i = 0;i < len; i++){
-        for (j = 0; j <26; j++){
-            char ch = 'A' + j;
-            if (str2[i] ==  ch){
-                sheet2[j][countX[j]] = i+1;
-                countX[j]++;
-            }
-        }
+    len2 = str2.length();
+    for (i = 0;i < len2; i++){
+                sheet2[str2[i]][countX[str2[i]]] = i;
+                countX[str2[i]]++;
     }
     cout << str1 << endl;
     cout << str2 << endl;
-    for (i = 0;i < count[0]; i++){
-        cout<<sheet1[0][i]<<' ' ;
-    }
-    cout <<endl;
-    for (i = 0;i < countX[0]; i++){
-        cout<<sheet2[0][i]<<' ';
-    }
-    cout <<endl;
-    for (i = 0;i < count[0]; i++){
-        for (j = 0;j < countX[0]; j++){
-            cout<<sheet1[0][i] - sheet2[0][j]<<' ' ;
+
+    
+    for (i = 0; i < len1; i++){
+        for (j = 0;j < countX[str1[i]]; j++){
+            num[i][j] = i - sheet2[str1[i]][j];
+            n[i - sheet2[str1[i]][j]+400]++;
+            cout<<i - sheet2[str1[i]][j]<<"  ";
         }
     }
+    cout<<endl;
+    max = 0;
+    for(i = 0; i <800; i++){
+        if (n[i]>max){
+            max =n[i];
+        }
+    }
+    cout<<max<<endl;
+    for(i = 0; i <800; i++){
+        if (n[i]==max){
+            dis[k] = i -400;
+            k++;
+        }
+    }
+    for (;k>0;k--) {
+        cout<<dis[k-1]<<endl;
+        for (i = 0; i < len1; i++){
+            for (j = 0;j < countX[str1[i]]; j++){
+                if(num[i][j] == dis[k-1]){
+                    cout<<str1[i];
+                }
+            }
+        }
+        cout<<endl;
+    }
+
     return 0;
 }
 
